@@ -29,7 +29,7 @@ class Payments(models.Model):
         **optional
     )
     reference_code = models.CharField(max_length=100, unique=True, **optional)
-    amount = models.IntegerField(**optional)
+    amount = models.FloatField(**optional)
     is_paid = models.BooleanField(default=False)
     paid_date = models.DateField(default=timezone.now)
     created_date = models.DateTimeField(auto_now_add=True)

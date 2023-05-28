@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
-from django.db.models import Sum, Value
+from django.db.models import Sum, FloatField
 from django.db.models.functions import Coalesce
 from django.shortcuts import get_object_or_404
 from django.utils.translation import gettext_lazy as _
@@ -51,7 +51,7 @@ class PaymentsModelSerializer(serializers.ModelSerializer):
         currency_id = self.data.get('currency')
         currency = Currency.objects.get(id=currency_id)
 
-        payments_total_amount = Payments.objects.filter(user=user_object).aggregate(sum_amount=Coalesce(Sum('amount'), Value(0)))['sum_amount']
+        payments_total_amount = Payments.objects.filter(user=user_object).aggregate(sum_amount=Coalesce(Sum('amount', output_field=FloatField()), 0.00))['sum_amount']
 
         try:
             if current_datetime.date() != tomorrow_datetime.date() and payments_total_amount < amount_limit:
